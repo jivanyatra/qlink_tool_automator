@@ -1,0 +1,33 @@
+{
+    "load_times": {
+        "old_tool": 4,
+        "new_tool": 2
+    },
+    "key_delays": {
+        "typing": 0.01,
+        "old_enter": 1,
+        "old_exit": 2,
+        "new_enter": 1,
+        "new_exit": 2
+    },
+    "tool_paths": {
+        "old_tool": "",
+        "new_tool": ""
+    },
+    "commands": {
+        "old_cmd": "",
+        "new_cmd": ""
+    },
+    "pw": {
+        "old_pw": "",
+        "new_pw": ""
+    },
+    "old_serv": {
+        "url": "",
+        "port": ""
+    },
+    "new_serv": {
+        "ip": "",
+        "port": ""
+    }
+}
