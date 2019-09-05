@@ -14,7 +14,7 @@ This tool simulates the following (in order):
 1. launching the new tool
 1. changing the baud rate for the device and connecting to it
 1. opening the raw prompt
-1. enteringa programming command of choice
+1. entering a programming command of choice
    * this includes the password twice, ip address, and port
 1. providing a two second window for manual verification
 1. closing the new tool
@@ -30,7 +30,7 @@ As such, I'm not looking for collaboration.
 ### To Do
 - [x] Initial build, very basic
 - [x] Make sure it runs on windows (via pyinstaller)
-- [/] Make it more modular with an external configuration
+- [ ] Make it more modular with an external configuration
 - [ ] Find an alternative way of launching the apps without using windows shortcuts.
 
 # Changelog
@@ -39,6 +39,7 @@ As such, I'm not looking for collaboration.
 * adding external configuration files
 * adding parser and abstracting away some of the scriptyness into discrete functions
 
-#### v 0.5 - initial version
+#### v 0.5 - released 08/19/19
+* initial version
 * basic version, very scripty
 * gets the job done with pyinstaller
