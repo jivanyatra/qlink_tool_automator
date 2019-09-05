@@ -1,5 +1,6 @@
 import pyautogui as pag
 from time import sleep
+import json
 
 scr_width, scr_height = pag.size()
 ctr_x = scr_width/2
@@ -13,8 +14,11 @@ old_app_shortcut = ['ctrl', 'alt', 'shift', '0']
 new_app_shortcut = ['ctrl', 'alt', 'shift', '9']
 app_load_time = 2
 
-#example info to be changed locally
 
+# example info moved externally to "sample_config.json"
+# actual config expected in "config.json"
+"""
+#example info to be changed locally
 url1 = ""
 port1 = "10000"
 password1 = "password1"
@@ -24,9 +28,34 @@ ip2 = ""
 port2 = "10002"
 password2 = "password2"
 command2 = "AT+GTDMS={},2,{},1,{ip2},{port2},,,120,7F9F,,0,,0,30,,FFFF$".format(password2, password2, ip2=ip2, port2=port2)
+"""
 
 break_list = ['quit', 'q', 'exit', 'x']
 
+def build_config():
+    """builds a default config"""
+    
+    cfg = {}
+    
+    try:
+        with open("sample_config.json") as f:
+            cfg = json.load(f)
+    except FileNotFoundError as e:
+        print("sample_config.json not found; building config from scratch")
+    
+    if cfg:
+        with open("config.json", "w") as f:
+            json.dump(cfg, f)
+        break
+    
+    cfg = {
+          
+          
+          
+          
+          
+          
+          }
 
 def launch_enter_old_tool():
     pag.hotkey(*old_app_shortcut)
