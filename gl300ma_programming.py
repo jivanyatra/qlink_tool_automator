@@ -32,7 +32,7 @@ command2 = "AT+GTDMS={},2,{},1,{ip2},{port2},,,120,7F9F,,0,,0,30,,FFFF$".format(
 
 break_list = ['quit', 'q', 'exit', 'x']
 
-def build_config():
+def build_config() -> None:
     """builds a default config"""
     
     cfg = {}
@@ -80,15 +80,15 @@ def build_config():
     with open("config.json", "w") as f:
         json.dump(cfg, f)
         
-def load_config(cfg):
+def load_config(cfg) -> dict:
     """loads a json config (calls a validate function) and returns a dict"""
     pass
 
-def validate_config(cfg):
+def validate_config(cfg) -> None:
     """checks config for empty or invalid values"""
     pass
 
-def launch_enter_old_tool():
+def launch_enter_old_tool() -> None:
     pag.hotkey(*old_app_shortcut)
     sleep(6)
     pag.click(focus_target)
@@ -99,7 +99,7 @@ def launch_enter_old_tool():
     pag.typewrite(['tab', 'tab', 'space'], 0.05)
     sleep(2)
 
-def program_old_tool():
+def program_old_tool() -> None:
     pag.hotkey('ctrl', 'l')
     sleep(0.5)
     pag.typewrite(command1, 0.01)
@@ -110,7 +110,7 @@ def program_old_tool():
     pag.hotkey('alt', 'f4')
 #    sleep(1)
 
-def launch_enter_new_tool():
+def launch_enter_new_tool() -> None:
     pag.hotkey(*new_app_shortcut)
     sleep(app_load_time+1)
     pag.click(focus_target)
@@ -121,7 +121,7 @@ def launch_enter_new_tool():
     pag.typewrite(['tab', 'tab', 'tab', 'space'], 0.05)
     sleep(1)
 
-def program_new_tool():
+def program_new_tool() -> None:
     pag.hotkey('ctrl', 'l')
     sleep(0.5)
     pag.typewrite(command2, 0.01)
