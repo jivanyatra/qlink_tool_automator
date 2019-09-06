@@ -33,7 +33,7 @@ command2 = "AT+GTDMS={},2,{},1,{ip2},{port2},,,120,7F9F,,0,,0,30,,FFFF$".format(
 break_list = ['quit', 'q', 'exit', 'x']
 
 def build_config() -> None:
-    """builds a default config"""
+    """builds a default config from sample_config.json, or shows an error and builds a basic backup"""
     
     cfg = {}
     
@@ -89,6 +89,7 @@ def validate_config(cfg) -> None:
     pass
 
 def launch_enter_old_tool() -> None:
+    """launches the old tool, enters the pw, and enters the program"""
     pag.hotkey(*old_app_shortcut)
     sleep(6)
     pag.click(focus_target)
@@ -100,6 +101,7 @@ def launch_enter_old_tool() -> None:
     sleep(2)
 
 def program_old_tool() -> None:
+    """launches raw programming window, programs unit, then closes old tool"""
     pag.hotkey('ctrl', 'l')
     sleep(0.5)
     pag.typewrite(command1, 0.01)
@@ -111,6 +113,7 @@ def program_old_tool() -> None:
 #    sleep(1)
 
 def launch_enter_new_tool() -> None:
+    """launches the new tool, changes baud rate, and enters the program"""
     pag.hotkey(*new_app_shortcut)
     sleep(app_load_time+1)
     pag.click(focus_target)
@@ -122,6 +125,7 @@ def launch_enter_new_tool() -> None:
     sleep(1)
 
 def program_new_tool() -> None:
+    """launches the raw programming window, programs unit, then closes the new tool"""
     pag.hotkey('ctrl', 'l')
     sleep(0.5)
     pag.typewrite(command2, 0.01)
