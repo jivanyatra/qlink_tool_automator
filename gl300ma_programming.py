@@ -43,19 +43,50 @@ def build_config():
     except FileNotFoundError as e:
         print("sample_config.json not found; building config from scratch")
     
-    if cfg:
-        with open("config.json", "w") as f:
-            json.dump(cfg, f)
-        break
-    
-    cfg = {
-          
-          
-          
-          
-          
-          
-          }
+    if not cfg:
+        cfg = {
+            "load_times": {
+                "old_tool": 4,
+                "new_tool": 2
+            },
+            "key_delays": {
+                "typing": 0.01,
+                "old_enter": 1,
+                "old_exit": 2,
+                "new_enter": 1,
+                "new_exit": 2
+            },
+            "tool_paths": {
+                "old_tool": "",
+                "new_tool": ""
+            },
+            "commands": {
+                "old_cmd": "",
+                "new_cmd": ""
+            },
+            "pw": {
+                "old_pw": "",
+                "new_pw": ""
+            },
+            "old_serv": {
+                "url": "",
+                "port": ""
+            },
+            "new_serv": {
+                "ip": "",
+                "port": ""
+            }
+        }
+    with open("config.json", "w") as f:
+        json.dump(cfg, f)
+        
+def load_config(cfg):
+    """loads a json config (calls a validate function) and returns a dict"""
+    pass
+
+def validate_config(cfg):
+    """checks config for empty or invalid values"""
+    pass
 
 def launch_enter_old_tool():
     pag.hotkey(*old_app_shortcut)
