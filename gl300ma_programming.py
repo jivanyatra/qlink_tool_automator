@@ -82,7 +82,9 @@ def build_config() -> None:
         
 def load_config(cfg) -> dict:
     """loads a json config (calls a validate function) and returns a dict"""
-    pass
+    if not validate_config(cfg):
+	    print("Config Validation failed")
+		return {}
 
 def validate_config(cfg) -> bool:
     """checks config for empty or invalid values"""
