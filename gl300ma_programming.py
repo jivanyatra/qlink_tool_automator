@@ -84,9 +84,21 @@ def load_config(cfg) -> dict:
     """loads a json config (calls a validate function) and returns a dict"""
     pass
 
-def validate_config(cfg) -> None:
+def validate_config(cfg) -> bool:
     """checks config for empty or invalid values"""
-    pass
+    for section, values in cfg:
+        for k, v in values:
+            if not v:
+                print("Invalid Config: Missing Parameters")
+                return False
+            if section == "load_times" or \ # ugly split line, but looks better in my IDE for now
+               section == "key_delays":
+                # I know this section isn't the most efficient; need to move these
+                # checks so they don't occur every time
+                if not isinstance(v, int) or not isinstance(v, float):
+                    print("Invalid Config: times and delays must be int or float")
+                    return False
+    return True
 
 def launch_enter_old_tool() -> None:
     """launches the old tool, enters the pw, and enters the program"""
