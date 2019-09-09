@@ -16,14 +16,14 @@ path_to_cfg = "config.json"
 break_list = ['quit', 'q', 'exit', 'x']
 
 def get_target() -> Tuple[float, float]:
-	scr_width, scr_height = pag.size()
-	ctr_x = scr_width/2
-	ctr_y = scr_height/2
+    scr_width, scr_height = pag.size()
+    ctr_x = scr_width/2
+    ctr_y = scr_height/2
 
-	buf_y = scr_height*0.15
+    buf_y = scr_height*0.15
 
-	focus_target = (ctr_x, ctr_y-buf_y)
-	return focus_target
+    focus_target = (ctr_x, ctr_y-buf_y)
+    return focus_target
 
 def build_config(path_to_cfg: str) -> None:
     """builds a default config from sample_config.json, or shows an error and builds a basic backup"""
@@ -91,7 +91,7 @@ def load_config(path_to_cfg: str) -> dict:
     if not validate_config(cfg):
         print("Config Validation failed")
         return {}
-	return cfg
+    return cfg
 
 def validate_config(cfg: dict) -> bool:
     """checks config for empty or invalid values"""
@@ -111,7 +111,7 @@ def validate_config(cfg: dict) -> bool:
 
 def launch_app(app: str) -> None:
     """Launches an app (given a filename) using Popen, with fixes for PyInstaller. YMMV if not using windows"""
-	p = Path.cwd().resolve()
+    p = Path.cwd().resolve()
     p = p.joinpath(app)
     env = os.environ
     si = subprocess.STARTUPINFO()
@@ -143,10 +143,10 @@ def program_old_tool(cfg: dict) -> None:
     pag.hotkey('ctrl', 'l')
     sleep(0.5)
     pag.typewrite(cfg["commands"]["old_tool"].format(cfg["pw"]["old_pw"],
-													 cfg["old_serv"]["url"],
-													 cfg["old_serv"]["port"]
-													 ),
-				  cfg["key_delays"]["typing"])
+                                                     cfg["old_serv"]["url"],
+                                                     cfg["old_serv"]["port"]
+                                                     ),
+                  cfg["key_delays"]["typing"])
     pag.hotkey('enter')
     sleep(cfg["key_delays"]["old_exit"])
     pag.hotkey('alt', 'f4')
@@ -170,11 +170,11 @@ def program_new_tool(cfg: dict) -> None:
     pag.hotkey('ctrl', 'l')
     sleep(0.5)
     pag.typewrite(cfg["commands"]["new_tool"].format(cfg["pw"]["new_pw"],
-													 cfg["pw"]["new_pw"],
-													 cfg["new_serv"]["ip"],
-													 cfg["new_serv"]["port"]
-													 ),
-				  cfg["key_delays"]["typing"])
+                                                     cfg["pw"]["new_pw"],
+                                                     cfg["new_serv"]["ip"],
+                                                     cfg["new_serv"]["port"]
+                                                     ),
+                  cfg["key_delays"]["typing"])
     pag.hotkey('enter')
     sleep(cfg["key_delays"]["new_exit"])
     pag.hotkey('alt', 'f4')
@@ -182,17 +182,17 @@ def program_new_tool(cfg: dict) -> None:
 
 def preload() -> dict:
     """Does the config loading and returns it as a dict (or exits)"""
-	global path_to_cfg
+    global path_to_cfg
     cfg = load_config(path_to_cfg)
     if not cfg:
-		i = input("There was an error in loading the configuration file. press enter to quit the app > ")
-	    exit("Error in loading configuration: check/edit config and try again")
-	else:
-	    return cfg
+        i = input("There was an error in loading the configuration file. press enter to quit the app > ")
+        exit("Error in loading configuration: check/edit config and try again")
+    else:
+        return cfg
 
 def main() -> None:
-	center = get_target()
-	
+    center = get_target()
+    
     cfg = preload()
     # main loop
     while True:
