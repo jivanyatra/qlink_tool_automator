@@ -30,14 +30,22 @@ As such, I'm not looking for collaboration.
 ### To Do
 - [x] Initial build, very basic
 - [x] Make sure it runs on windows (via pyinstaller)
-- [ ] Make it more modular with an external configuration
-- [ ] Find an alternative way of launching the apps without using windows shortcuts.
+- [x] Make it more modular with an external configuration
+- [x] Find an alternative way of launching the apps without using windows shortcuts.
+- [x] Look for a way to speed up app launches
 
 # Changelog
 
-#### v 0.5.1 - in progress
+#### v 0.8 - in progress
+* finished externalconfig with json (not configparser)
+* finished pulling things into functions
+* launched apps without shortcuts keys (using subprocess.Popen)
+* in testing 
+
+#### v 0.5.1 - skipped release
 * adding external configuration files
 * adding parser and abstracting away some of the scriptyness into discrete functions
+* in testing - not sufficient for current release
 
 #### v 0.5 - released 08/19/19
 * initial version
