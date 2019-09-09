@@ -88,6 +88,7 @@ def load_config(path_to_cfg: str) -> dict:
     if not validate_config(cfg):
         print("Config Validation failed")
         return {}
+	return cfg
 
 def validate_config(cfg: dict) -> bool:
     """checks config for empty or invalid values"""
