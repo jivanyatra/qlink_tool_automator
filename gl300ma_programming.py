@@ -106,58 +106,69 @@ def validate_config(cfg: dict) -> bool:
                     return False
     return True
 
+def launch_app(app: str) -> None:
+    """Launches an app (given a filename) using Popen, with fixes for PyInstaller. YMMV if not using windows"""
+
 def launch_enter_old_tool(cfg: dict, mouse_target: Tuple[float, float]) -> None:
     """launches the old tool, enters the pw, and enters the program"""
     pag.hotkey(*old_app_shortcut)
-    sleep(6)
-    pag.click(focus_target)
+    sleep(cfg["load_times"]["old_tool"])
+    pag.click(mouse_target)
     pag.hotkey('shift', 'tab')
     pag.hotkey('shift', 'tab')
     pag.hotkey('backspace')
-    pag.typewrite(password1, 0.01)
+    pag.typewrite(cfg["pw"]["old_pw"], cfg["key_delays"]["typing"])
     pag.typewrite(['tab', 'tab', 'space'], 0.05)
-    sleep(2)
+    sleep(cfg["key_delays"]["old_enter"])
 
 def program_old_tool(cfg: dict) -> None:
     """launches raw programming window, programs unit, then closes old tool"""
     pag.hotkey('ctrl', 'l')
     sleep(0.5)
-    pag.typewrite(command1, 0.01)
+    pag.typewrite(cfg["commands"]["old_tool"].format(cfg["pw"]["old_pw"],
+													 cfg["old_serv"]["url"],
+													 cfg["old_serv"]["port"]
+													 ),
+				  cfg["key_delays"]["typing"])
     pag.hotkey('enter')
-    sleep(2)
+    sleep(cfg["key_delays"]["old_exit"])
     pag.hotkey('alt', 'f4')
     pag.hotkey('alt', 'f4')
     pag.hotkey('alt', 'f4')
-#    sleep(1)
 
 def launch_enter_new_tool(cfg: dict, mouse_target: Tuple[float, float]) -> None:
     """launches the new tool, changes baud rate, and enters the program"""
     pag.hotkey(*new_app_shortcut)
-    sleep(app_load_time+1)
-    pag.click(focus_target)
+    sleep(cfg["load_times"]["new_tool"])
+    pag.click(mouse_target)
     pag.hotkey('shift', 'tab')
     pag.hotkey('shift', 'tab')
     pag.hotkey('shift', 'tab')
     pag.hotkey('home')
     pag.typewrite(['tab', 'tab', 'tab', 'space'], 0.05)
-    sleep(1)
+    sleep(cfg["key_delays"]["new_enter"])
 
 def program_new_tool(cfg: dict) -> None:
     """launches the raw programming window, programs unit, then closes the new tool"""
     pag.hotkey('ctrl', 'l')
     sleep(0.5)
-    pag.typewrite(command2, 0.01)
+    pag.typewrite(cfg["commands"]["new_tool"].format(cfg["pw"]["new_pw"],
+													 cfg["pw"]["new_pw"],
+													 cfg["new_serv"]["ip"],
+													 cfg["new_serv"]["port"]
+													 ),
+				  cfg["key_delays"]["typing"])
     pag.hotkey('enter')
-    sleep(2)
+    sleep(cfg["key_delays"]["new_exit"])
     pag.hotkey('alt', 'f4')
     pag.hotkey('alt', 'f4')
-    sleep(1)
 
 def preload() -> dict:
     """Does the config loading"""
 	global path_to_cfg
     cfg = load_config(path_to_cfg)
     if not cfg:
+		i = input("There was an error in loading the configuration file. press enter to quit the app > ")
 	    exit("Error in loading configuration: check/edit config and try again")
 	else:
 	    return cfg
