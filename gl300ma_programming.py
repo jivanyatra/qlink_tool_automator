@@ -1,6 +1,7 @@
 import pyautogui as pag
 from time import sleep
 import json
+from sys import exit
 
 scr_width, scr_height = pag.size()
 ctr_x = scr_width/2
@@ -29,11 +30,12 @@ port2 = "10002"
 password2 = "password2"
 command2 = "AT+GTDMS={},2,{},1,{ip2},{port2},,,120,7F9F,,0,,0,30,,FFFF$".format(password2, password2, ip2=ip2, port2=port2)
 """
-
+path_to_cfg = "config.json"
 break_list = ['quit', 'q', 'exit', 'x']
 
 def build_config() -> None:
     """builds a default config from sample_config.json, or shows an error and builds a basic backup"""
+    global path_to_cfg
     
     cfg = {}
     
@@ -77,14 +79,27 @@ def build_config() -> None:
                 "port": ""
             }
         }
-    with open("config.json", "w") as f:
-        json.dump(cfg, f)
-        
-def load_config(cfg) -> dict:
+    try:
+        with open(path_to_cfg, "w") as f:
+            json.dump(cfg, f)
+    except PermissionError:
+        print("You do not have permission to write/edit files in this folder.")
+        print("Try moving these files to a folder that you have permissions for.")
+        i = input("Press the enter key to quit this application >")
+        exit()
+
+def load_config(path_to_cfg) -> dict:
     """loads a json config (calls a validate function) and returns a dict"""
+    try:
+        with open(path_to_cfg) as f:
+            cfg = json.load(f)
+    except FileNotFoundError:
+        print("config not found, building config file")
+        build_config()
+
     if not validate_config(cfg):
-	    print("Config Validation failed")
-		return {}
+        print("Config Validation failed")
+        return {}
 
 def validate_config(cfg) -> bool:
     """checks config for empty or invalid values"""
@@ -149,7 +164,14 @@ def program_new_tool() -> None:
     pag.hotkey('alt', 'f4')
     sleep(1)
 
-if __name__ == "__main__":
+def preload() -> None:
+    """Does the config loading"""
+    cfg = load_config()
+    if not cfg:
+
+def main() -> None:
+    
+    # main loop
     while True:
         s = input("Enter (or q to quit) --> ")
         if s in break_list:
@@ -158,3 +180,6 @@ if __name__ == "__main__":
         program_old_tool()
         launch_enter_new_tool()
         program_new_tool()
+
+if __name__ == "__main__":
+    main()
