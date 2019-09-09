@@ -97,7 +97,7 @@ def validate_config(cfg) -> bool:
                section == "key_delays":
                 # I know this section isn't the most efficient; need to move these
                 # checks so they don't occur every time
-                if not isinstance(v, int) or not isinstance(v, float):
+                if not isinstance(v, int) and not isinstance(v, float):
                     print("Invalid Config: times and delays must be int or float")
                     return False
     return True
