@@ -3,6 +3,9 @@ from time import sleep
 import json
 from sys import exit
 from typing import Tuple
+from pathlib import Path
+import subprocess
+import os
 
 center = (0, 0)
 
@@ -108,10 +111,24 @@ def validate_config(cfg: dict) -> bool:
 
 def launch_app(app: str) -> None:
     """Launches an app (given a filename) using Popen, with fixes for PyInstaller. YMMV if not using windows"""
+	p = Path.cwd().resolve()
+    p = p.joinpath(app)
+    env = os.environ
+    si = subprocess.STARTUPINFO()
+    si.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+    startup_args = {'stdin': subprocess.PIPE,
+                'stderr': subprocess.PIPE,
+                'startupinfo': si,
+                'env': env,
+                'shell': True }
+    try:
+        o = subprocess.Popen(str(p.resolve()), **startup_args)
+    except Exception as e:
+        print(e)
 
 def launch_enter_old_tool(cfg: dict, mouse_target: Tuple[float, float]) -> None:
     """launches the old tool, enters the pw, and enters the program"""
-    pag.hotkey(*old_app_shortcut)
+    launch_app(cfg["tool_paths"]["old_tool"])
     sleep(cfg["load_times"]["old_tool"])
     pag.click(mouse_target)
     pag.hotkey('shift', 'tab')
@@ -138,7 +155,7 @@ def program_old_tool(cfg: dict) -> None:
 
 def launch_enter_new_tool(cfg: dict, mouse_target: Tuple[float, float]) -> None:
     """launches the new tool, changes baud rate, and enters the program"""
-    pag.hotkey(*new_app_shortcut)
+    launch_app(cfg["tool_paths"]["new_tool"])
     sleep(cfg["load_times"]["new_tool"])
     pag.click(mouse_target)
     pag.hotkey('shift', 'tab')
@@ -164,7 +181,7 @@ def program_new_tool(cfg: dict) -> None:
     pag.hotkey('alt', 'f4')
 
 def preload() -> dict:
-    """Does the config loading"""
+    """Does the config loading and returns it as a dict (or exits)"""
 	global path_to_cfg
     cfg = load_config(path_to_cfg)
     if not cfg:
@@ -174,7 +191,6 @@ def preload() -> dict:
 	    return cfg
 
 def main() -> None:
-    global center
 	center = get_target()
 	
     cfg = preload()
@@ -183,9 +199,9 @@ def main() -> None:
         s = input("Enter (or q to quit) --> ")
         if s in break_list:
             break
-        launch_enter_old_tool(cfg)
+        launch_enter_old_tool(cfg, center)
         program_old_tool(cfg)
-        launch_enter_new_tool(cfg)
+        launch_enter_new_tool(cfg, center)
         program_new_tool(cfg)
 
 if __name__ == "__main__":
