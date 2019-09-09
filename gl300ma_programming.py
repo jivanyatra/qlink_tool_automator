@@ -2,45 +2,33 @@ import pyautogui as pag
 from time import sleep
 import json
 from sys import exit
+from typing import Tuple
 
-scr_width, scr_height = pag.size()
-ctr_x = scr_width/2
-ctr_y = scr_height/2
-
-buf_y = scr_height*0.15
-
-focus_target = (ctr_x, ctr_y-buf_y)
-
-old_app_shortcut = ['ctrl', 'alt', 'shift', '0']
-new_app_shortcut = ['ctrl', 'alt', 'shift', '9']
-app_load_time = 2
-
+center = (0, 0)
 
 # example info moved externally to "sample_config.json"
 # actual config expected in "config.json"
-"""
-#example info to be changed locally
-url1 = ""
-port1 = "10000"
-password1 = "password1"
-command1 = "AT+GTSRI={},4,,1,{url1},{port1},,0,,0,0,0,,,,FFFF$".format(password1, url1=url1, port1=port1)
 
-ip2 = ""
-port2 = "10002"
-password2 = "password2"
-command2 = "AT+GTDMS={},2,{},1,{ip2},{port2},,,120,7F9F,,0,,0,30,,FFFF$".format(password2, password2, ip2=ip2, port2=port2)
-"""
 path_to_cfg = "config.json"
 break_list = ['quit', 'q', 'exit', 'x']
 
-def build_config() -> None:
+def get_target() -> Tuple[float, float]:
+	scr_width, scr_height = pag.size()
+	ctr_x = scr_width/2
+	ctr_y = scr_height/2
+
+	buf_y = scr_height*0.15
+
+	focus_target = (ctr_x, ctr_y-buf_y)
+	return focus_target
+
+def build_config(path_to_cfg: str) -> None:
     """builds a default config from sample_config.json, or shows an error and builds a basic backup"""
-    global path_to_cfg
     
     cfg = {}
     
     try:
-        with open("sample_config.json") as f:
+        with open("sample_config.json", "r") as f:
             cfg = json.load(f)
     except FileNotFoundError as e:
         print("sample_config.json not found; building config from scratch")
@@ -86,12 +74,12 @@ def build_config() -> None:
         print("You do not have permission to write/edit files in this folder.")
         print("Try moving these files to a folder that you have permissions for.")
         i = input("Press the enter key to quit this application >")
-        exit()
+        exit("Folder permissions do not allow creating or writing a config file")
 
-def load_config(path_to_cfg) -> dict:
+def load_config(path_to_cfg: str) -> dict:
     """loads a json config (calls a validate function) and returns a dict"""
     try:
-        with open(path_to_cfg) as f:
+        with open(path_to_cfg, "r") as f:
             cfg = json.load(f)
     except FileNotFoundError:
         print("config not found, building config file")
@@ -101,7 +89,7 @@ def load_config(path_to_cfg) -> dict:
         print("Config Validation failed")
         return {}
 
-def validate_config(cfg) -> bool:
+def validate_config(cfg: dict) -> bool:
     """checks config for empty or invalid values"""
     for section, values in cfg:
         for k, v in values:
@@ -117,7 +105,7 @@ def validate_config(cfg) -> bool:
                     return False
     return True
 
-def launch_enter_old_tool() -> None:
+def launch_enter_old_tool(cfg: dict, mouse_target: Tuple[float, float]) -> None:
     """launches the old tool, enters the pw, and enters the program"""
     pag.hotkey(*old_app_shortcut)
     sleep(6)
@@ -129,7 +117,7 @@ def launch_enter_old_tool() -> None:
     pag.typewrite(['tab', 'tab', 'space'], 0.05)
     sleep(2)
 
-def program_old_tool() -> None:
+def program_old_tool(cfg: dict) -> None:
     """launches raw programming window, programs unit, then closes old tool"""
     pag.hotkey('ctrl', 'l')
     sleep(0.5)
@@ -141,7 +129,7 @@ def program_old_tool() -> None:
     pag.hotkey('alt', 'f4')
 #    sleep(1)
 
-def launch_enter_new_tool() -> None:
+def launch_enter_new_tool(cfg: dict, mouse_target: Tuple[float, float]) -> None:
     """launches the new tool, changes baud rate, and enters the program"""
     pag.hotkey(*new_app_shortcut)
     sleep(app_load_time+1)
@@ -153,7 +141,7 @@ def launch_enter_new_tool() -> None:
     pag.typewrite(['tab', 'tab', 'tab', 'space'], 0.05)
     sleep(1)
 
-def program_new_tool() -> None:
+def program_new_tool(cfg: dict) -> None:
     """launches the raw programming window, programs unit, then closes the new tool"""
     pag.hotkey('ctrl', 'l')
     sleep(0.5)
@@ -164,22 +152,29 @@ def program_new_tool() -> None:
     pag.hotkey('alt', 'f4')
     sleep(1)
 
-def preload() -> None:
+def preload() -> dict:
     """Does the config loading"""
-    cfg = load_config()
+	global path_to_cfg
+    cfg = load_config(path_to_cfg)
     if not cfg:
+	    exit("Error in loading configuration: check/edit config and try again")
+	else:
+	    return cfg
 
 def main() -> None:
-    
+    global center
+	center = get_target()
+	
+    cfg = preload()
     # main loop
     while True:
         s = input("Enter (or q to quit) --> ")
         if s in break_list:
             break
-        launch_enter_old_tool()
-        program_old_tool()
-        launch_enter_new_tool()
-        program_new_tool()
+        launch_enter_old_tool(cfg)
+        program_old_tool(cfg)
+        launch_enter_new_tool(cfg)
+        program_new_tool(cfg)
 
 if __name__ == "__main__":
     main()
